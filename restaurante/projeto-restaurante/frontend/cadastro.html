@@ -3,45 +3,79 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Página de Cadastro</title>
-  <link rel="stylesheet" href="/projeto-restaurante/frontend/public/css/cadastro.css">
+  <title>Cadastro - Restaurante</title>
+  <link rel="stylesheet" href="/css/cadastro.css">
 </head>
 <body>
   <div class="cadastro-container">
-    <form class="cadastro-form">
+    <form id="cadastroForm">
       <h2>Cadastro</h2>
       
       <div class="input-group">
-        <label for="name">Nome Completo</label>
-        <input type="text" id="name" name="name" placeholder="Digite seu nome completo" required>
+        <label for="nome_completo">Nome Completo</label>
+        <input type="text" id="nome_completo" name="nome_completo" required>
       </div>
       
       <div class="input-group">
         <label for="email">E-mail</label>
-        <input type="email" id="email" name="email" placeholder="Digite seu e-mail" required>
+        <input type="email" id="email" name="email" required>
       </div>
       
       <div class="input-group">
-        <label for="username">Usuário</label>
-        <input type="text" id="username" name="username" placeholder="Escolha um nome de usuário" required>
+        <label for="senha">Senha</label>
+        <input type="password" id="senha" name="senha" required>
       </div>
       
       <div class="input-group">
-        <label for="password">Senha</label>
-        <input type="password" id="password" name="password" placeholder="Digite sua senha" required>
+        <label for="confirmar_senha">Confirmar Senha</label>
+        <input type="password" id="confirmar_senha" name="confirmar_senha" required>
       </div>
       
       <div class="input-group">
-        <label for="confirm-password">Confirmar Senha</label>
-        <input type="password" id="confirm-password" name="confirm-password" placeholder="Confirme sua senha" required>
+        <label for="data_nascimento">Data de Nascimento</label>
+        <input type="date" id="data_nascimento" name="data_nascimento" required>
       </div>
       
-      <button type="submit" class="cadastro-btn">Cadastrar</button>
+      <button type="submit">Cadastrar</button>
       
-      <div class="login-link">
-        <p>Já tem uma conta? <a href="login.html">Faça login</a></p> <!-- Link para a página de login -->
-      </div>
+      <p>Já tem conta? <a href="login.html">Faça login</a></p>
     </form>
   </div>
+
+  <script>
+    document.getElementById('cadastroForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      
+      const formData = {
+        nome_completo: e.target.nome_completo.value,
+        email: e.target.email.value,
+        senha: e.target.senha.value,
+        confirmar_senha: e.target.confirmar_senha.value,
+        data_nascimento: e.target.data_nascimento.value
+      };
+
+      try {
+        const response = await fetch('http://localhost:3000/api/auth/cadastro', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(formData)
+        });
+
+        const result = await response.json();
+        
+        if (response.ok) {
+          alert(result.message);
+          window.location.href = '/login.html';
+        } else {
+          alert(`Erro: ${result.message}`);
+        }
+      } catch (error) {
+        console.error('Erro:', error);
+        alert('Erro ao conectar com o servidor');
+      }
+    });
+  </script>
 </body>
 </html>
